@@ -2,7 +2,7 @@
 
 
 # configure
-use constant DATA    => './metadata';
+use constant DATA    => './etc';
 use constant CARRELS => './library';
 
 # require

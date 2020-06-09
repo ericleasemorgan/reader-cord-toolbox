@@ -4,17 +4,22 @@
 
 
 # configure
-SQL=".mode csv\n.headers on\nSELECT id || '.txt' AS id, author FROM bib ORDER BY author;"
+SQL=".mode csv\n.headers on\nSELECT id || '.txt' AS id, ##FIELD## FROM bib order by ##FIELD##;"
+LIBRARY='./library'
 
 # sanity check
-if [[ -z $1 ]]; then
-	echo "Usage: $0 <carrel>" >&2
+if [[ -z $1 || -z $2 ]]; then
+	echo "Usage: $0 <carrel> <author|title|date>\n" >&2
 	exit
 fi
 
 # get input
 CARREL=$1
+FIELD=$2
+
+# build the sql	
+SQL=$( echo "$SQL" | sed "s/##FIELD##/$FIELD/g" )
 
 # do the work and done
-printf "$SQL" | sqlite3 "./library/$CARREL/etc/reader.db"
+printf "$SQL" | sqlite3 "$LIBRARY/$CARREL/etc/reader.db"
 exit

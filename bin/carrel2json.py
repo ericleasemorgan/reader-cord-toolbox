@@ -11,7 +11,7 @@
 
 # configure
 PUNCTUATION = '!"#$%&()*+,-./:;<=>?@[\\]^_`{|}~\t\n'
-POS         = 'NN'
+POS         = 'NNP'
 CARRELS     = './carrels'
 WEIGHT      = 0
 
@@ -25,12 +25,18 @@ import pandas as pd
 import sys
 
 # sanity check
-if len( sys.argv ) != 2 :
-	sys.stderr.write( 'Usage: ' + sys.argv[ 0 ] + " <name>\n" )
+if len( sys.argv ) != 3 :
+	sys.stderr.write( 'Usage: ' + sys.argv[ 0 ] + " <name> <NN|NNS|NNP|NNPS>\n" )
 	quit()
 
 # get input
 corpus = sys.argv[ 1 ]
+pos    = sys.argv[ 2 ]
+
+# sanity check, again
+#if ( (pos != 'NN') or (pos != 'NNS') or (pos != 'NNP') or (pos != 'NNPS') ) :
+#	sys.stderr.write( pos + ' Usage: ' + sys.argv[ 0 ] + " <name> <NN|NNS|NNP|NNPS>\n" )
+#	quit()
 
 # define
 def remove_puncutation( word ) :
@@ -44,7 +50,7 @@ for path in glob.glob( CARRELS + '/%s/pos/*.pos' % corpus ) :
 	except : continue
 	else   : break
 
-noun       = df[ df[ 'pos' ] == POS ]
+noun       = df[ df[ 'pos' ] == pos ]
 number     = noun.lemma.value_counts()
 clean_noun = list( set( [ remove_puncutation( word ) for word in noun.lemma ] ) )
 
